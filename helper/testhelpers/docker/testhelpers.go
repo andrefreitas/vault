@@ -319,15 +319,15 @@ func (d *Runner) Start(ctx context.Context, addSuffix bool) (*types.ContainerJSO
 		if len(pieces) < 2 {
 			return nil, nil, "", fmt.Errorf("expected port of the form 1234/tcp, got: %s", port)
 		}
-		// if d.RunOptions.NetworkID != "" {
-		// 	addrs = append(addrs, fmt.Sprintf("%s:%s", cfg.Hostname, pieces[0]))
-		// } else {
-		mapped, ok := inspect.NetworkSettings.Ports[nat.Port(port)]
-		if !ok || len(mapped) == 0 {
-			return nil, nil, "", fmt.Errorf("no port mapping found for %s", port)
+		if d.RunOptions.NetworkID != "" {
+			addrs = append(addrs, fmt.Sprintf("%s:%s", cfg.Hostname, pieces[0]))
+		} else {
+			mapped, ok := inspect.NetworkSettings.Ports[nat.Port(port)]
+			if !ok || len(mapped) == 0 {
+				return nil, nil, "", fmt.Errorf("no port mapping found for %s", port)
+			}
+			addrs = append(addrs, fmt.Sprintf("127.0.0.1:%s", mapped[0].HostPort))
 		}
-		addrs = append(addrs, fmt.Sprintf("127.0.0.1:%s", mapped[0].HostPort))
-		//}
 	}
 
 	return &inspect, addrs, c.ID, nil

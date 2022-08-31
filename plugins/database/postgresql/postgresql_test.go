@@ -1129,7 +1129,6 @@ func testPostgreSQL_Repmgr_AddUser(t *testing.T, ctx context.Context, db *Postgr
 }
 
 func getHost(url string) string {
-	//"postgres://postgres:secret@127.0.0.1:55188/postgres?sslmode=disable"
 	splitCreds := strings.Split(url, "@")[1]
 
 	return strings.Split(splitCreds, "/")[0]
