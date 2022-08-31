@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"os"
 	"strings"
 	"testing"
 	"time"
@@ -1004,11 +1003,6 @@ func TestNewUser_CustomUsername(t *testing.T) {
 // `docker network create -d bridge postgres-repmgr`
 // `export POSTGRES_MULTIHOST_NET=postgres-repmgr`
 func TestPostgreSQL_Repmgr(t *testing.T) {
-	_, exists := os.LookupEnv("POSTGRES_MULTIHOST_NET")
-	if !exists {
-		t.Skipf("POSTGRES_MULTIHOST_NET not set, skipping test")
-	}
-
 	// Create 2 postgres-repmgr containers
 	db0, runner0, url0, container0 := testPostgreSQL_Repmgr_Container(t, "psql-repl-0")
 	_, _, url1, _ := testPostgreSQL_Repmgr_Container(t, "psql-repl-1")
