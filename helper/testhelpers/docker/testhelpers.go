@@ -52,33 +52,6 @@ func NewServiceRunner(opts RunOptions) (*Runner, error) {
 	if opts.NetworkID == "" {
 		opts.NetworkID = os.Getenv("TEST_DOCKER_NETWORK_ID")
 	}
-
-	if opts.NetworkID != "" {
-		listOpts := types.NetworkListOptions{}
-		list, err := dapi.NetworkList(context.Background(), listOpts)
-		if err != nil {
-			return nil, fmt.Errorf("failed to look up docker network list: %s", err)
-		}
-		found := false
-		for _, v := range list {
-			if v.Name == opts.NetworkID {
-				found = true
-			}
-		}
-
-		options := types.NetworkCreate{
-			Driver:         "bridge",
-			CheckDuplicate: true,
-		}
-
-		if !found {
-			_, err = dapi.NetworkCreate(context.Background(), opts.NetworkID, options)
-			if err != nil {
-				return nil, fmt.Errorf("failed to create network %q: %s", opts.NetworkID, err)
-			}
-		}
-	}
-
 	if opts.ContainerName == "" {
 		if strings.Contains(opts.ImageRepo, "/") {
 			return nil, fmt.Errorf("ContainerName is required for non-library images")
